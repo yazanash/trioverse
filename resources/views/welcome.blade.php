@@ -201,9 +201,9 @@
             </div>
         </form>
         <div class="icons">
-            <a style="--clr:#1877f2" href=""><i class="fa-brands fa-facebook-f"></i></a>
-            <a style="--clr:#e4405f" href=""><i class="fa-brands fa-instagram"></i></a>
-            <a style="--clr:#25d366" href=""><i class="fa-brands fa-whatsapp"></i></a>
+            <a style="--clr:#1877f2" href="https://www.facebook.com/trio3verse"><i class="fa-brands fa-facebook-f"></i></a>
+            <a style="--clr:#e4405f" href="https://www.instagram.com/trioverse.3v"><i class="fa-brands fa-instagram"></i></a>
+            <a style="--clr:#25d366" href="https://wa.me/963953684110"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
 
     </div>
