@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\License;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 class GymController extends Controller
 {
     /**
@@ -16,7 +17,7 @@ class GymController extends Controller
     {
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/gyms');
+        ])->get(env('API_BASE_URL').'gyms');
         if ($response->successful()) {
             $data = $response->json();
             $collection = collect($data);
@@ -29,16 +30,14 @@ class GymController extends Controller
                 $gym->phone_number = $item['phone_number'];   
                 $gym->telephone = $item['telephone'];
                 $gym->address = $item['address'];  
-                $gym->logo = 'https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/logos/' .$gym->gym_id ;
+                $gym->logo = env('API_BASE_URL').'gyms/logos/' .$gym->gym_id ;
                 $gyms->push($gym); 
             }
             return view('gyms.gyms',compact('gyms'));
         } else {
             // Handle the error
-            echo 'Request failed with status: ' . $response->status();
+        //    return 
         }
-       
-        return $response->json();
     }
 
     /**
@@ -48,7 +47,7 @@ class GymController extends Controller
     {
         return view('gyms.create');
     }
-
+   
     /**
      * Store a newly created resource in storage.
      */
@@ -62,7 +61,9 @@ class GymController extends Controller
             'address' => 'required',
         ]);
         $input = $request->all();
-        $response = Http::post('https://uniapi-ui65lw0m.b4a.run/api/v1/gyms', [
+        $response = Http::withHeaders([
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->post(env('API_BASE_URL').'gyms', [
             'gym_name' => $input['gym_name'],
             'owner_name' => $input['owner_name'],
             'phone_number' => $input['phone_number'],
@@ -70,7 +71,8 @@ class GymController extends Controller
             'address' => $input['address'],
             'logo' => ''
         ]);
-        return $response->json();
+        $gym_id = $response['gym_id'];
+        return redirect()->route('gyms.image.create',$gym_id);
     }
 
     /**
@@ -80,7 +82,8 @@ class GymController extends Controller
     {
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/'. $id);
+            
+        ])->get(env('API_BASE_URL').'gyms/'. $id);
         $gym = new Gym();
         $gym->gym_id = $response['id'];
         $gym->gym_name = $response['gym_name'];   
@@ -88,11 +91,12 @@ class GymController extends Controller
         $gym->phone_number = $response['phone_number'];   
         $gym->telephone = $response['telephone'];
         $gym->address = $response['address'];  
-        $gym->logo = 'https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/logos/' .$response['id'] ;
+        $gym->logo = env('API_BASE_URL').'gyms/logos/' .$response['id'] ;
         $licenses = collect([]);
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/licenses/gym/'. $id);
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'licenses/gym/'. $id);
         if ($response->successful()) {
             
             $statusCode = $response->status();
@@ -132,7 +136,7 @@ class GymController extends Controller
         
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/'. $id);
+        ])->get(env('API_BASE_URL').'gyms/'. $id);
         $gym = new Gym();
         $gym->gym_id = $response['id'];
         $gym->gym_name = $response['gym_name'];   
@@ -156,7 +160,10 @@ class GymController extends Controller
             'address' => 'required',
         ]);
         $input = $request->all();
-        $response = Http::put("https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/{$id}", [
+        $response = Http::put(env('API_BASE_URL')."gyms/{$id}", [
+            'headers' => [
+                'X-API-KEY' => env('FLASK_API_KEY'),
+            ],
             'gym_name' => $input['gym_name'],
             'owner_name' => $input['owner_name'],
             'phone_number' => $input['phone_number'],
@@ -164,7 +171,7 @@ class GymController extends Controller
             'address' => $input['address'],
             'logo' => ''
         ]);
-        return $response->json();
+        return redirect()->route('gyms.show',$id);
     }
 
     /**

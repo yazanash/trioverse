@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,14 +10,19 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Cairo" rel="stylesheet">
     <style>html{font-size: 15px}
-
+        .card{
+            background: #ffffff
+        }
     </style>
     <!-- Scripts -->
-    
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="all">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.4/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    {{-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="all"> --}}
 </head>
 <body  style="font-family:Arial">
     <div id="app">
@@ -27,7 +32,7 @@
                 <div class="row g-0 align-items-center">
                     <div class="col-md-2">
                         <img 
-                            src="{{public_path('images/logo.png')}}" width="200" height="200"
+                            src="{{asset('images/logo.png')}}" width="200" height="200"
                             class="img-fluid rounded-start"
                             alt="Card title"
                         />
@@ -132,17 +137,56 @@
         </main>
     </div>
     <div class="container">
-        <button class="btn btn-primary" onclick="printDiv()">Download PDF</button>
+        <button class="btn btn-primary" onclick="generatePDF()">Download PDF</button>
+        <a href="{{route('gyms.index')}}" class="btn btn-danger">Back to home</a>
     </div>
-   
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> --}}
+
+
     <script>
         function printDiv() {
-            // var printContents = document.getElementById('content').innerHTML;
-            // var originalContents = document.body.innerHTML;
+            const content = document.getElementById('content');
+            const cleanContent = DOMPurify.sanitize(content.innerHTML);
+            const opt = {
+                margin:       1,
+                filename:     'document.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().from(cleanContent).set(opt).save();
+        }
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+            const content = document.getElementById('content').innerHTML;
+            const cleanContent = DOMPurify.sanitize(content);
+            await html2canvas(document.getElementById('content'), {
+                scale: 2
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
 
-            // document.body.innerHTML = originalContents;
-            window.print();
-            // document.body.innerHTML = originalContents;
+                doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    doc.addPage();
+                    doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+
+                doc.save('document.pdf');
+            });
         }
     </script>
 </body>

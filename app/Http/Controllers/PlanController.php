@@ -15,7 +15,8 @@ class PlanController extends Controller
     {
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/plans');
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans');
         if ($response->successful()) {
             $data = $response->json();
             $collection = collect($data);
@@ -34,10 +35,8 @@ class PlanController extends Controller
             return view('Plan.plans',compact('plans'));
         } else {
             // Handle the error
-            echo 'Request failed with status: ' . $response->status();
         }
        
-        return $response->json();
     }
 
     /**
@@ -62,13 +61,15 @@ class PlanController extends Controller
         ]);
      
         $input = $request->all();
-        $response = Http::post('https://uniapi-ui65lw0m.b4a.run/api/v1/plans', [
+        $response = Http::withHeaders([
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->post(env('API_BASE_URL').'plans', [
             'plan_name' => $input['plan_name'],
             'price' => $input['price'],
             'period' => $input['period'],
             'description' => $input['description']
         ]);
-        return $response->json();
+        return redirect()->route('plans.index');
     }
 
     /**
@@ -88,7 +89,8 @@ class PlanController extends Controller
         
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/plans/'. $id);
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans/'. $id);
         $plan = new Plan();
         $plan->plan_id = $response['id'];
         $plan->plan_name = $response['plan_name'];   
@@ -110,13 +112,15 @@ class PlanController extends Controller
             'description' => 'required',
         ]);
         $input = $request->all();
-        $response = Http::put("https://uniapi-ui65lw0m.b4a.run/api/v1/plans/{$id}", [
+        $response = Http::WithHeaders([
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->put(env('API_BASE_URL')."plans/{$id}", [
             'plan_name' => $input['plan_name'],
             'price' => $input['price'],
             'period' => $input['period'],
             'description' => $input['description']
         ]);
-        return $response->json();
+        return redirect()->route('plans.index');
     }
 
     /**

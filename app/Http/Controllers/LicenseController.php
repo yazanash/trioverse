@@ -16,31 +16,7 @@ class LicenseController extends Controller
      */
     public function index()
     {
-        // $response = Http::withHeaders([
-        //     'content-type' => 'application/json',
-        // ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/licenses');
-        // if ($response->successful()) {
-        //     $data = $response->json();
-        //     $collection = collect($data);
-        //     $licenses = collect([]);
-        //     foreach ($collection as $item) {
-        //         $license = new License();
-        //         $license->plan_id = $item['_id'];
-        //         $license->gym_id = $item['gym_id'];   
-        //         $license->plan_id = $item['plan_id'];
-        //         $license->price = $item['price'];   
-        //         $license->subscribe_date = $item['subscribe_date'];
-        //         $license->subscribe_end_date = $item['subscribe_end_date'];
-        //         $license->period = $item['period'];
-        //         $licenses->push($license); 
-        //     }
-        //     return view('gyms.gyms',compact('gyms'));
-        // } else {
-        //     // Handle the error
-        //     echo 'Request failed with status: ' . $response->status();
-        // }
-       
-        // return $response->json();
+        
     }
 
     /**
@@ -50,7 +26,8 @@ class LicenseController extends Controller
     {
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/plans');
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans');
         if ($response->successful()) {
             $data = $response->json();
             $collection = collect($data);
@@ -82,7 +59,10 @@ class LicenseController extends Controller
         ]);
        
         $input = $request->all();
-        $response = Http::post('https://uniapi-ui65lw0m.b4a.run/api/v1/licenses', [
+        $response = Http::withHeaders([
+            'content-type' => 'application/json',
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->post(env('API_BASE_URL').'licenses', [
             'gym_id' => $gym_id,
             'plan_id' => $input['plan_id'],
             'subscribe_date' => Carbon::parse($input['subscribe_date'])->format('d/m/Y'),
@@ -91,7 +71,7 @@ class LicenseController extends Controller
         // get gym 
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/'. $gym_id);
+        ])->get(env('API_BASE_URL').'gyms/'. $gym_id);
         $gym = new Gym();
         $gym->gym_id = $response['id'];
         $gym->gym_name = $response['gym_name'];   
@@ -99,7 +79,7 @@ class LicenseController extends Controller
         $gym->phone_number = $response['phone_number'];   
         $gym->telephone = $response['telephone'];
         $gym->address = $response['address'];  
-        $gym->logo = 'https://uniapi-ui65lw0m.b4a.run/api/v1/gyms/logos/' .$response['id'] ;
+        $gym->logo = env('API_BASE_URL').'gyms/logos/' .$response['id'] ;
 
         // get license
         $license = new License();
@@ -112,16 +92,19 @@ class LicenseController extends Controller
         // get plan info
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/plans/'.  $license->plan_id);
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans/'.  $license->plan_id);
         $plan = new Plan();
         $plan->plan_id = $response['id'];
         $plan->plan_name = $response['plan_name'];   
         $plan->price = $response['price'];
         $plan->period = $response['period'];   
         $plan->description = $response['description'];
-        $pdf = Pdf::loadView('pdf.license',compact('gym','license','plan'))->setOption(['dpi' => 150]);
-        $pdf->setBasePath(public_path());
-        return $pdf->download($gym->gym_name.'-'. Carbon::parse($license->subscribe_date)->format('d-m-Y').'.pdf');
+        // $pdf = Pdf::loadView('pdf.license',compact('gym','license','plan'))->setOption(['dpi' => 150]);
+        // $pdf->setBasePath(public_path());
+        return view('pdf.license',compact('gym','license','plan'));
+        // $pdf->download($gym->gym_name.'-'. Carbon::createFromFormat('d/m/Y',$license->subscribe_date)->toDateString().'.pdf');
+        // return redirect()->route('gyms.show',$gym_id);
     }
 
     /**
@@ -129,23 +112,7 @@ class LicenseController extends Controller
      */
     public function show(string $id)
     {
-        // $response = Http::withHeaders([
-        //     'content-type' => 'application/json',
-        // ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/licenses/get/'. $id);
-        // $license = new License();
-        // $license->license_id = $item['_id'];
-        // $license->gym_id = $item['gym_id'];   
-        // $license->plan_id = $item['plan_id'];
-        // $license->price = $item['price'];   
-        // $license->subscribe_date = $item['subscribe_date'];
-        // $license->subscribe_end_date = $item['subscribe_end_date'];
-        // $license->period = $item['period'];
         
-        
-        
-
-        // return view('gyms.gym',compact('gym'));
-        // return $gym;
     }
 
     /**
@@ -156,7 +123,8 @@ class LicenseController extends Controller
         
         $response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/licenses/get/'. $id);
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'licenses/get/'. $id);
         
         $license = new License();
         $license->license_id = $response['_id'];
@@ -166,7 +134,8 @@ class LicenseController extends Controller
 
         $plan_response = Http::withHeaders([
             'content-type' => 'application/json',
-        ])->get('https://uniapi-ui65lw0m.b4a.run/api/v1/plans');
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans');
 
         if ($plan_response->successful()) {
             $data = $plan_response->json();
@@ -197,13 +166,53 @@ class LicenseController extends Controller
             'subscribe_date' => 'required|date',
         ]);
         $input = $request->all();
-        $response = Http::put("https://uniapi-ui65lw0m.b4a.run/api/v1/licenses/{$id}", [
+        $response = Http::withHeaders([
+            'content-type' => 'application/json',
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->put(env('API_BASE_URL')."licenses/{$id}", [
             'gym_id' => $gym_id,
             'plan_id' => $input['plan_id'],
             'subscribe_date' => Carbon::parse($input['subscribe_date'])->format('d/m/Y'),
         ]);
-        dd($response);
-        return $response->json();
+        
+        $data = $response->json();
+        // get gym 
+        $response = Http::withHeaders([
+            'content-type' => 'application/json',
+        ])->get(env('API_BASE_URL').'gyms/'. $gym_id);
+        $gym = new Gym();
+        $gym->gym_id = $response['id'];
+        $gym->gym_name = $response['gym_name'];   
+        $gym->owner_name = $response['owner_name'];
+        $gym->phone_number = $response['phone_number'];   
+        $gym->telephone = $response['telephone'];
+        $gym->address = $response['address'];  
+        $gym->logo = env('API_BASE_URL').'gyms/logos/' .$response['id'] ;
+
+        // get license
+        $license = new License();
+        $license->plan_id = $data['plan_id'];   
+        $license->subscribe_date = $data['subscribe_date'];
+        $license->subscribe_end_date = $data['subscribe_end_date'];
+        $license->price = $data['price'];
+        $license->period = $data['period'];
+        $license->product_key = $data['product_key'];
+        // get plan info
+        $response = Http::withHeaders([
+            'content-type' => 'application/json',
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'plans/'.  $license->plan_id);
+        $plan = new Plan();
+        $plan->plan_id = $response['id'];
+        $plan->plan_name = $response['plan_name'];   
+        $plan->price = $response['price'];
+        $plan->period = $response['period'];   
+        $plan->description = $response['description'];
+        // $pdf = Pdf::loadView('pdf.license',compact('gym','license','plan'))->setOption(['dpi' => 150]);
+        // $pdf->setBasePath(public_path());
+        // $pdf->download($gym->gym_name.'-'. Carbon::createFromFormat('d/m/Y',$license->subscribe_date)->toDateString().'.pdf');
+        return view('pdf.license',compact('gym','license','plan'));
+        // return redirect()->route('gyms.show',$gym_id);
     }
 
     /**

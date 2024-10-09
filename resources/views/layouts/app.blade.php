@@ -18,6 +18,7 @@
 </head>
 <body>
     <div id="app">
+       
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
@@ -26,23 +27,29 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
+                @auth
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{route('gyms.index')}}">Gyms</a>
                           </li>
+                          @role('admin')
                           <li class="nav-item">
                             <a class="nav-link" href="{{route('plans.index')}}">Plans</a>
                           </li>
+                         
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{route('users.index')}}">Users</a>
+                          </li>
+                          @endrole
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
                         @guest
-                            @if (Route::has('login'))
+                            {{-- @if (Route::has('login'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
@@ -52,7 +59,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
-                            @endif
+                            @endif --}}
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -74,6 +81,8 @@
                         @endguest
                     </ul>
                 </div>
+                @endauth
+              
             </div>
         </nav>
 

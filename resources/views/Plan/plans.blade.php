@@ -22,14 +22,16 @@
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{$plan->index}}" aria-expanded="true" aria-controls="{{$plan->index}}">
-                            {{$plan->plan_name}} 
+                           <h4> {{$plan->plan_name}} </h4>
                           </button>
                         </h2>
                         <div id="{{$plan->index}}" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
-                            <h3><strong> {{$plan->price}}</strong></h3> 
-                            <small>Period : {{$plan->period}}</small>
-                            <p class="text-muted"> {{$plan->description}}</p>
+                          <div class="accordion-body d-flex flex-direction-row justify-content-between align-items-center">
+                            <div>
+                              <h4><strong> {{$plan->price}}</strong></h3> 
+                              <p class="h5">Period : {{$plan->period}}</small>
+                              <p class="text-muted h6"> {{$plan->description}}</p>
+                            </div>
                             <a href="{{route('plans.edit',$plan->plan_id)}}" class="btn btn-primary">Edit</a>
                           </div>
                         </div>
