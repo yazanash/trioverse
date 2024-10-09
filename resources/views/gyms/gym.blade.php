@@ -31,7 +31,10 @@
                                         >{{$gym->phone_number}} - {{$gym->telephone}}</small
                                     >
                                 </p>
+                                @role(['admin','supervisor'])
                                 <a href="{{route('gyms.edit',$gym->gym_id)}}" class="btn btn-primary">Edit</a>
+                                <a href="{{route('gyms.image.create',$gym->gym_id)}}" class="btn btn-primary">Add image</a>
+                                @endrole
                             </div>
                         </div>
                     </div>
@@ -41,12 +44,17 @@
                     <ul class="list-group list-group-flush">
                         @if ($licenses->Count()>0)
                             @foreach ($licenses as $license )
-                            <li class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1"> Plan : {{$license->plan_name}} - Price: {{$license->price}}</h5>
+                            <li class="list-group-item d-flex flex-direction-row justify-content-between align-items-center">
+                                <div>
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1"> Plan : {{$license->plan_name}} - Price: {{$license->price}}</h5>
+                                    </div>
+                                    <p class="mb-1">{{$license->subscribe_date}} - {{$license->subscribe_end_date}}</p>
                                 </div>
-                                <p class="mb-1">{{$license->subscribe_date}} - {{$license->subscribe_end_date}}</p>
+                               
+                                @role(['admin','supervisor'])
                                 <a href="{{route('licenses.edit',[$gym->gym_id,$license->license_id])}}" class="btn btn-primary">Edit</a>
+                                @endrole
                             </li>
                             @endforeach
                         @else

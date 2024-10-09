@@ -6,7 +6,11 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header d-flex flex-row justify-content-between"><h3>{{ __('Dashboard') }}</h3>  <a class="btn btn-primary" href="{{route('gyms.create')}}" role="button">Add Gym</a></div>
+                <div class="card-header d-flex flex-row justify-content-between"><h3>{{ __('Dashboard') }}</h3> 
+                  @role(['admin',"supervisor"])
+                   <a class="btn btn-primary" href="{{route('gyms.create')}}" role="button">Add Gym</a>
+                  @endrole
+                  </div>
 
                 <div class="card-body">
                     @if (session('status'))

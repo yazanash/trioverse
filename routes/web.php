@@ -4,31 +4,40 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GymController;
 use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ImageController;
+
 Route::get('/', function () {
-    return view('inv');
+    return view('welcome');
+})->name('welcome');
+
+
+Route::group(['middleware' => ['auth']], function () {
+
+Route::group(['middleware' => ['role:admin,supervisor']], function () {
+    
+    Route::get('/gyms/create', [GymController::class, 'create'])->name('gyms.create');
+    Route::post('/gyms/store', [GymController::class, 'store'])->name('gyms.store');
+    Route::get('/gyms/{id}', [GymController::class, 'show'])->name('gyms.show');
+    Route::get('/gyms/edit/{id}', [GymController::class, 'edit'])->name('gyms.edit');
+    Route::post('/gyms/update/{id}', [GymController::class, 'update'])->name('gyms.update');
+    Route::get('/gyms/{id}/upload', [ImageController::class, 'create'])->name('gyms.image.create');
+    Route::post('/gyms/{id}/upload', [ImageController::class, 'store'])->name('gyms.image.store');
+//////////////////////////////////////////////////////////////////////////////////////////////
+    Route::get('/gyms/{gym_id}/licenses/edit/{id}', [LicenseController::class, 'edit'])->name('licenses.edit');
+    Route::post('/gyms/{gym_id}/licenses/update/{id}', [LicenseController::class, 'update'])->name('licenses.update');
+//////////////////////////////////////////////////////////////////////////////////////////////
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
 });
 
+Route::group(['middleware' => ['role:admin,supervisor,sales']], function () {
+    Route::get('/gyms', [GymController::class, 'index'])->name('gyms.index');
+    Route::get('/gyms/{gym_id}/licenses/create', [LicenseController::class, 'create'])->name('licenses.create');
+    Route::post('/gyms/{gym_id}/licenses/store', [LicenseController::class, 'store'])->name('licenses.store');
+});
 
-Route::get('/gyms', [GymController::class, 'index'])->name('gyms.index');
-
-Route::get('/gyms/create', [GymController::class, 'create'])->name('gyms.create');
-
-Route::post('/gyms/store', [GymController::class, 'store'])->name('gyms.store');
-
-Route::get('/gyms/{id}', [GymController::class, 'show'])->name('gyms.show');
-
-Route::get('/gyms/edit/{id}', [GymController::class, 'edit'])->name('gyms.edit');
-
-Route::post('/gyms/update/{id}', [GymController::class, 'update'])->name('gyms.update');
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-Route::get('/gyms/{gym_id}/licenses/create', [LicenseController::class, 'create'])->name('licenses.create');
-Route::post('/gyms/{gym_id}/licenses/store', [LicenseController::class, 'store'])->name('licenses.store');
-
-Route::get('/gyms/{gym_id}/licenses/edit/{id}', [LicenseController::class, 'edit'])->name('licenses.edit');
-Route::post('/gyms/{gym_id}/licenses/update/{id}', [LicenseController::class, 'update'])->name('licenses.update');
-
-//////////////////////////////////////////////////////////////////////////////////////////////
+Route::group(['middleware' => ['role:admin']], function () {
 
 Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
 
@@ -42,8 +51,9 @@ Route::get('/plans/edit/{id}', [PlanController::class, 'edit'])->name('plans.edi
 
 Route::post('/plans/update/{id}', [PlanController::class, 'update'])->name('plans.update');
 
-
-
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
+Route::post('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.updateRoles');
+});
+});
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

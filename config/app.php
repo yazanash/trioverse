@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+
+    
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -54,6 +56,10 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'burl' => env('APP_URL', 'http://localhost'),
+
+
+    
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -98,7 +104,7 @@ return [
     'cipher' => 'AES-256-CBC',
 
     'key' => env('APP_KEY'),
-
+   
     'previous_keys' => [
         ...array_filter(
             explode(',', env('APP_PREVIOUS_KEYS', ''))

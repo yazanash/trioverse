@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -169,4 +169,44 @@
             </div>
         </div>
     </body>
+</html> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trioverse</title>
+    <link rel="stylesheet" href="{{asset('css/coming-soon.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+</head>
+<body style="background: linear-gradient(rgba(1,1,1,.7),rgba(1,1,1,.6)) ,url({{asset('images/background.jpg')}}) center/cover;">
+    <div class="content">
+            <div class="logo"><img src="{{asset('images/trioverse-logo.png')}}" alt=""></div>
+            @auth
+                <a href="{{route('home')}}" class="login">Dashboard</a>
+            @else
+            <a href="{{route('login')}}" class="login">Login</a>
+            @endauth
+            
+        <h1>Software development and business solutions</h1>
+        <h2>an awesome website is under construction, stay tuned</h2>
+        <div class="arrow bounce">
+            <i class="fa-solid fa-angles-down"></i>
+        </div>
+        <form action="" id="input" class="button">
+            <div class="search-box">
+                <input type="email" name="" id="" class="search-input" placeholder="Email" required>
+                <button type="submit" class="search-button" form="input">Notify me</button>
+            </div>
+        </form>
+        <div class="icons">
+            <a style="--clr:#1877f2" href=""><i class="fa-brands fa-facebook-f"></i></a>
+            <a style="--clr:#e4405f" href=""><i class="fa-brands fa-instagram"></i></a>
+            <a style="--clr:#25d366" href=""><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+
+    </div>
+   
+</body>
 </html>
