@@ -38,6 +38,9 @@
                           <li class="nav-item">
                             <a class="nav-link" href="{{route('plans.index')}}">Plans</a>
                           </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{route('notify.create')}}">Notfications</a>
+                          </li>
                          
                           <li class="nav-item">
                             <a class="nav-link" href="{{route('users.index')}}">Users</a>

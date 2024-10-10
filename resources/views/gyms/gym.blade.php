@@ -35,6 +35,9 @@
                                 <a href="{{route('gyms.edit',$gym->gym_id)}}" class="btn btn-primary">Edit</a>
                                 <a href="{{route('gyms.image.create',$gym->gym_id)}}" class="btn btn-primary">Add image</a>
                                 @endrole
+                                @role(['admin'])
+                                <a href="{{route('gyms.notify.create',$gym->gym_id)}}" class="btn btn-primary">Send notification for gym players</a>
+                                @endrole
                             </div>
                         </div>
                     </div>
