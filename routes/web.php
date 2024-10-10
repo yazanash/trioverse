@@ -6,7 +6,7 @@ use App\Http\Controllers\LicenseController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageController;
-
+use App\Http\Controllers\NotifyController;
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -23,6 +23,8 @@ Route::group(['middleware' => ['role:admin,supervisor']], function () {
     Route::post('/gyms/update/{id}', [GymController::class, 'update'])->name('gyms.update');
     Route::get('/gyms/{id}/upload', [ImageController::class, 'create'])->name('gyms.image.create');
     Route::post('/gyms/{id}/upload', [ImageController::class, 'store'])->name('gyms.image.store');
+
+   
 //////////////////////////////////////////////////////////////////////////////////////////////
     Route::get('/gyms/{gym_id}/licenses/edit/{id}', [LicenseController::class, 'edit'])->name('licenses.edit');
     Route::post('/gyms/{gym_id}/licenses/update/{id}', [LicenseController::class, 'update'])->name('licenses.update');
@@ -53,6 +55,12 @@ Route::post('/plans/update/{id}', [PlanController::class, 'update'])->name('plan
 
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::post('/users/{user}/roles', [UserController::class, 'updateRoles'])->name('users.updateRoles');
+
+Route::get('/gyms/{id}/notify/create', [NotifyController::class, 'createGymNotify'])->name('gyms.notify.create');
+Route::post('/gyms/{id}/notify/store', [NotifyController::class, 'gymPlayers'])->name('gyms.notify.store');
+
+Route::get('/notify', [NotifyController::class, 'createNotify'])->name('notify.create');
+Route::post('/notify', [NotifyController::class, 'allPlayers'])->name('notify.store');
 });
 });
 Auth::routes();
