@@ -160,10 +160,9 @@ class GymController extends Controller
             'address' => 'required',
         ]);
         $input = $request->all();
-        $response = Http::put(env('API_BASE_URL')."gyms/{$id}", [
-            'headers' => [
-                'X-API-KEY' => env('FLASK_API_KEY'),
-            ],
+        $response = Http::withHeaders([
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->put(env('API_BASE_URL')."gyms/{$id}", [
             'gym_name' => $input['gym_name'],
             'owner_name' => $input['owner_name'],
             'phone_number' => $input['phone_number'],
