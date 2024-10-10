@@ -177,6 +177,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trioverse</title>
+    <link rel="icon" type="image/x-icon" href="{{asset('images/trio-logo.ico')}}">
     <link rel="stylesheet" href="{{asset('css/coming-soon.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
 </head>
