@@ -32,7 +32,7 @@
     var resumable = new Resumable({
         target: '/upload',
         query: { _token: '{{ csrf_token() }}' },
-        fileType: ['exe'],
+        fileType: ['exe','apk','APK','app','APP'],
         chunkSize: 1 * 1024 * 1024,
         simultaneousUploads: 3,
         testChunks: false,
