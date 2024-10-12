@@ -45,6 +45,9 @@
                           <li class="nav-item">
                             <a class="nav-link" href="{{route('users.index')}}">Users</a>
                           </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="{{route('updates.index')}}">updates</a>
+                          </li>
                           @endrole
                     </ul>
 
