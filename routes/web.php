@@ -7,6 +7,10 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NotifyController;
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UpdateController;
+
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
@@ -61,7 +65,28 @@ Route::post('/gyms/{id}/notify/store', [NotifyController::class, 'gymPlayers'])-
 
 Route::get('/notify', [NotifyController::class, 'createNotify'])->name('notify.create');
 Route::post('/notify', [NotifyController::class, 'allPlayers'])->name('notify.store');
+
+
+
+Route::get('upload', [UploadController::class, 'showUploadForm'])->name('upload.form');
+Route::post('upload', [UploadController::class, 'uploadLargeFile'])->name('upload.large');
+
+Route::get('/updates', [UpdateController::class, 'index'])->name('updates.index');
+Route::get('/updates/create', [UpdateController::class, 'create'])->name('updates.create');
+Route::post('/updates', [UpdateController::class, 'store'])->name('updates.store');
 });
 });
 Auth::routes();
 
+Route::get('/download/{filename}', function ($filename) {
+    $path = storage_path('app/private/uploads/' . $filename);
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+
+    return response()->download($path);
+});
+
+Route::get('/app/desktop/updates', [UpdateController::class, 'getDesktopUpdateInfo']);
+Route::get('/app/mobile/updates/{platform}', [UpdateController::class, 'getMobileUpdateInfo']);
