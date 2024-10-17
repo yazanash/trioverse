@@ -65,7 +65,7 @@ class LicenseController extends Controller
         ])->post(env('API_BASE_URL').'licenses', [
             'gym_id' => $gym_id,
             'plan_id' => $input['plan_id'],
-            'subscribe_date' => Carbon::parse($input['subscribe_date'])->format('d/m/Y'),
+            'subscribe_date' => Carbon::parse($input['subscribe_date']),
         ]);
         $data = $response->json();
         // get gym 
@@ -129,7 +129,7 @@ class LicenseController extends Controller
         $license = new License();
         $license->license_id = $response['_id'];
         $license->plan_id = $response['plan_id'];
-        $license->subscribe_date = Carbon::parse($response['subscribe_date'])->format('Y-m-d');
+        $license->subscribe_date = Carbon::parse($response['subscribe_date']);
 
 
         $plan_response = Http::withHeaders([
@@ -172,7 +172,7 @@ class LicenseController extends Controller
         ])->put(env('API_BASE_URL')."licenses/{$id}", [
             'gym_id' => $gym_id,
             'plan_id' => $input['plan_id'],
-            'subscribe_date' => Carbon::parse($input['subscribe_date'])->format('d/m/Y'),
+            'subscribe_date' => Carbon::parse($input['subscribe_date']),
         ]);
         
         $data = $response->json();
