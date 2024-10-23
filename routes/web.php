@@ -9,7 +9,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UpdateController;
-
+use App\Http\Controllers\AppController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -90,3 +90,6 @@ Route::get('/download/{filename}', function ($filename) {
 
 Route::get('/app/desktop/updates', [UpdateController::class, 'getDesktopUpdateInfo']);
 Route::get('/app/mobile/updates/{platform}', [UpdateController::class, 'getMobileUpdateInfo']);
+
+
+Route::get('/app/privacy-policy', [AppController::class, 'privacy']);
