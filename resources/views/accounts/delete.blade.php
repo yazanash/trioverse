@@ -14,7 +14,7 @@
                         <div class="row mb-3">
                             <p><strong>Note :</strong>For delete your account , confirm your email address</p>
                             <p class="text-muted">We will send you an otp to your email address</p>
-                            <p class="text-danger"><strong >Warning :</strong><small>After verify your email your all data wil be deleted and not able to recover</small></p>
+                            <p class="text-danger"><strong >Warning :</strong><small>After verify your email your all data will be deleted and not able to recover</small></p>
 
                         </div>
 
