@@ -10,6 +10,7 @@ use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\AccountController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -93,3 +94,5 @@ Route::get('/app/mobile/updates/{platform}', [UpdateController::class, 'getMobil
 
 
 Route::get('/app/privacy-policy', [AppController::class, 'privacy']);
+
+Route::get('/uniceps/delete-account', [AccountController::class, 'deleteAccountRequest']);
