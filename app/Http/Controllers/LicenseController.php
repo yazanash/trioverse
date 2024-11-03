@@ -52,7 +52,7 @@ class LicenseController extends Controller
      */
     public function store(Request $request , string $gym_id)
     {
-        // dd($request);
+        $isFirst=false;
         $request->validate([
             'plan_id' => 'required',
             'subscribe_date' => 'required',
@@ -84,8 +84,8 @@ class LicenseController extends Controller
         // get license
         $license = new License();
         $license->plan_id = $data['plan_id'];   
-        $license->subscribe_date = $data['subscribe_date'];
-        $license->subscribe_end_date = $data['subscribe_end_date'];
+        $license->subscribe_date = Carbon::parse($data['subscribe_date'])->format('Y-m-d');
+        $license->subscribe_end_date = Carbon::parse($data['subscribe_end_date'])->format('Y-m-d');
         $license->price = $data['price'];
         $license->period = $data['period'];
         $license->product_key = $data['product_key'];
@@ -102,7 +102,25 @@ class LicenseController extends Controller
         $plan->description = $response['description'];
         // $pdf = Pdf::loadView('pdf.license',compact('gym','license','plan'))->setOption(['dpi' => 150]);
         // $pdf->setBasePath(public_path());
-        return view('pdf.license',compact('gym','license','plan'));
+        $res = Http::withHeaders([
+            'content-type' => 'application/json',
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'licenses/gym/'. $gym_id);
+        if ($res->successful()) {
+            
+            $statusCode = $res->status();
+            if($statusCode===200){
+
+                $data = $res->json();
+                $collection = collect($data);
+                if($collection->Count()===1){
+                    $isFirst=true;
+                }
+            }
+        }
+
+
+        return view('pdf.license',compact('gym','license','plan','isFirst'));
         // $pdf->download($gym->gym_name.'-'. Carbon::createFromFormat('d/m/Y',$license->subscribe_date)->toDateString().'.pdf');
         // return redirect()->route('gyms.show',$gym_id);
     }
@@ -129,7 +147,7 @@ class LicenseController extends Controller
         $license = new License();
         $license->license_id = $response['_id'];
         $license->plan_id = $response['plan_id'];
-        $license->subscribe_date = Carbon::parse($response['subscribe_date']);
+        $license->subscribe_date = Carbon::parse($response['subscribe_date'])->format('Y-m-d');
 
 
         $plan_response = Http::withHeaders([
@@ -165,6 +183,7 @@ class LicenseController extends Controller
             'plan_id' => 'required',
             'subscribe_date' => 'required|date',
         ]);
+        $isFirst=false;
         $input = $request->all();
         $response = Http::withHeaders([
             'content-type' => 'application/json',
@@ -192,8 +211,8 @@ class LicenseController extends Controller
         // get license
         $license = new License();
         $license->plan_id = $data['plan_id'];   
-        $license->subscribe_date = $data['subscribe_date'];
-        $license->subscribe_end_date = $data['subscribe_end_date'];
+        $license->subscribe_date = Carbon::parse($data['subscribe_date'])->format('Y-m-d');
+        $license->subscribe_end_date =Carbon::parse($data['subscribe_end_date'])->format('Y-m-d');
         $license->price = $data['price'];
         $license->period = $data['period'];
         $license->product_key = $data['product_key'];
@@ -210,8 +229,25 @@ class LicenseController extends Controller
         $plan->description = $response['description'];
         // $pdf = Pdf::loadView('pdf.license',compact('gym','license','plan'))->setOption(['dpi' => 150]);
         // $pdf->setBasePath(public_path());
+        $res = Http::withHeaders([
+            'content-type' => 'application/json',
+            'X-API-KEY' => env('FLASK_API_KEY'),
+        ])->get(env('API_BASE_URL').'licenses/gym/'. $gym_id);
+        if ($res->successful()) {
+            
+            $statusCode = $res->status();
+            if($statusCode===200){
+
+                $data = $res->json();
+                $collection = collect($data);
+                if($collection->Count()===1){
+                    $isFirst=true;
+                }
+            }
+        }
+
         // $pdf->download($gym->gym_name.'-'. Carbon::createFromFormat('d/m/Y',$license->subscribe_date)->toDateString().'.pdf');
-        return view('pdf.license',compact('gym','license','plan'));
+        return view('pdf.license',compact('gym','license','plan','isFirst'));
         // return redirect()->route('gyms.show',$gym_id);
     }
 
