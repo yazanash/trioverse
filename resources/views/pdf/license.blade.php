@@ -41,7 +41,7 @@
                         <div class="card-body">
                             <h1 class="card-title fw-bold">Uniceps License</h1>
                             <p class="card-text text-muted fs-5">
-                                License DATE : 01/10/2024
+                                License DATE : <strong style="padding: 5px"> {{$license->subscribe_date}} </strong>
                             </p>
                         </div>
                     </div>
@@ -53,9 +53,9 @@
                             <div class="card-body">
                                 <h2 class="card-title">Trioverse</h2>
                                 <p class="card-text">
-                                    +963 994916917 <br>
+                                    +963 953684110 <br>
                                     Syria , swaida <br>
-                                    support@trio-verse.com
+                                    Unicepse@gmail.com
                                 </p>
 
                             </div>
@@ -72,6 +72,9 @@
                     </div>
                     
                 </div>
+                @if ($isFirst)
+                <p><strong class="text-danger">ملاحظة :</strong> هذا الترخيص قابل للارتجاع خلال مدة اقصاها 30 يوم</p>
+                @endif
                 <hr>
             <table class="table">
                 <thead>
