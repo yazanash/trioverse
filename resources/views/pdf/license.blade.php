@@ -72,9 +72,9 @@
                     </div>
                     
                 </div>
-                @if ($isFirst)
+                {{-- @if ($isFirst)
                 <p><strong class="text-danger">ملاحظة :</strong> هذا الترخيص قابل للارتجاع خلال مدة اقصاها 30 يوم</p>
-                @endif
+                @endif --}}
                 <hr>
             <table class="table">
                 <thead>
