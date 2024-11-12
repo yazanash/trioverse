@@ -93,14 +93,14 @@ Route::get('/download/app/{filename}', function ($filename) {
 });
 Route::get('/download/{filename}', function ($filename) {
     $path = storage_path('app/private/uploads/' . $filename);
-
+    $apk = "app.apk";
     if (!File::exists($path)) {
         abort(404);
     }
     $contentType = 'application/vnd.android.package-archive';
-    return response()->download($path, $filename, [
+    return response()->download($path, $apk, [
         'Content-Type' => $contentType,
-        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        'Content-Disposition' => 'attachment; filename="' . $apk . '"',
     ]);
 });
 
