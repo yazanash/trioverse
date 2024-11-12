@@ -86,7 +86,25 @@ Route::get('/download/{filename}', function ($filename) {
         abort(404);
     }
 
-    return response()->download($path);
+    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+    $contentType = '';
+
+    switch ($extension) {
+        case 'apk':
+            $contentType = 'application/vnd.android.package-archive';
+            break;
+        case 'exe':
+            $contentType = 'application/octet-stream';
+            break;
+        default:
+            $contentType = 'application/octet-stream';
+            break;
+    }
+
+    return response()->download($path, $filename, [
+        'Content-Type' => $contentType,
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ]);
 });
 
 Route::get('/app/desktop/updates', [UpdateController::class, 'getDesktopUpdateInfo']);
