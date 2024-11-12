@@ -79,28 +79,25 @@ Route::post('/updates', [UpdateController::class, 'store'])->name('updates.store
 });
 Auth::routes();
 
+Route::get('/download/app/{filename}', function ($filename) {
+    $path = storage_path('app/private/uploads/' . $filename);
+
+    if (!File::exists($path)) {
+        abort(404);
+    }
+    $contentType = 'application/octet-stream';
+    return response()->download($path, $filename, [
+        'Content-Type' => $contentType,
+        'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+    ]);
+});
 Route::get('/download/{filename}', function ($filename) {
     $path = storage_path('app/private/uploads/' . $filename);
 
     if (!File::exists($path)) {
         abort(404);
     }
-
-    $extension = pathinfo($filename, PATHINFO_EXTENSION);
-    $contentType = '';
-
-    switch ($extension) {
-        case 'apk':
-            $contentType = 'application/vnd.android.package-archive';
-            break;
-        case 'exe':
-            $contentType = 'application/octet-stream';
-            break;
-        default:
-            $contentType = 'application/octet-stream';
-            break;
-    }
-
+    $contentType = 'application/vnd.android.package-archive';
     return response()->download($path, $filename, [
         'Content-Type' => $contentType,
         'Content-Disposition' => 'attachment; filename="' . $filename . '"',
